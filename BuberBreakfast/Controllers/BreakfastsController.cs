@@ -41,7 +41,7 @@ public class BreakfastsController : ApiController
 
         return getBreakfastResult.Match(
             breakfast => Ok(MapBreakfastResponse(breakfast)),
-            errors => Problem(errors));
+            Problem);
     }
 
     [HttpPut("{id:guid}")]
@@ -55,11 +55,11 @@ public class BreakfastsController : ApiController
         }
 
         var breakfast = requestToBreakfastResult.Value;
-        ErrorOr<UpsertedBreakfast> upsertBreakfastResult = _breakfastService.UpsertBreakfast(breakfast);
+        ErrorOr<UpsertBreakfast> upsertBreakfastResult = _breakfastService.UpsertBreakfast(breakfast);
 
         return upsertBreakfastResult.Match(
             upserted => upserted.IsNewlyCreated ? CreatedAtGetBreakfast(breakfast) : NoContent(),
-            errors => Problem(errors));
+            Problem);
     }
 
     [HttpDelete("{id:guid}")]
@@ -69,7 +69,7 @@ public class BreakfastsController : ApiController
 
         return deleteBreakfastResult.Match(
             deleted => NoContent(),
-            errors => Problem(errors));
+            Problem);
     }
 
     private static BreakfastResponse MapBreakfastResponse(Breakfast breakfast)
